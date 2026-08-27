@@ -1,7 +1,18 @@
-async function renderBooks() {
+async function renderBooks(filter) {
   const booksWrapper = document.querySelector(".books")
   
   const books = await getBooks()
+
+  if (filter === 'LOW_TO_HIGH') {
+   books.sort((a,b) => a.originalPrice - b.originalPrice) 
+  }
+  else if (filter === 'HIGHT_TO_LOW') {
+   books.sort((a,b) => b.originalPrice - a.originalPrice) 
+  }
+  else if (filter === 'RATING') {
+   books.sort((a,b) => b.rating - a.rating) 
+  }
+
   
   const booksHtml = books.map((book) => {
    return  `<div class="book">
@@ -12,14 +23,9 @@ async function renderBooks() {
       ${books.title}
     </div>
     <div class="book__ratings">
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star-half-alt"></i>
-    </div>
+     ${ratingsHTML(book.rating)}
     <div class="book__price">
-      <span>$${books.originalPrice.toFixed(2)}</span>
+      <span>$${book.originalPrice.toFixed(2)}</span>
     </div>
   </div>`
   })
@@ -27,9 +33,24 @@ async function renderBooks() {
   .join("")
 
   booksWrapper.innerHTML = booksHtml
-  console.log(booksHtml)
-  // booksWrapper.innerHTML = 
+}
 
+ function ratingsHTML(rating) {
+  let ratingHTML = ""
+
+  for (let i = 0; i < Math.floor(rating); ++i) {
+    ratingHTML += '<i class="fas fa-star"></i>'
+  }
+  
+  if (!Number.isInteger(rating)) {
+    ratingHTML += '<i class="fas fa-star-half-alt"></i>'
+  }
+
+  return ratingHTML
+}
+
+function filterBooks(event) {
+  renderBooks(event.target.value)
 }
 
 setTimeout(() => {
