@@ -25,6 +25,7 @@
     </div>
     <div class="book__ratings">
      ${ratingsHTML(book.rating)}
+    </div>
     <div class="book__price">
       <span>$${book.originalPrice.toFixed(2)}</span>
     </div>
